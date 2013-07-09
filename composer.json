@@ -1,0 +1,12 @@
+{
+    "require": {
+        "doctrine/mongodb-odm": "1.*",
+        "symfony/yaml": "2.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
