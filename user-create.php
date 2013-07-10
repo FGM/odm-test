@@ -3,7 +3,8 @@
 use Doctrine\Common\Util\Debug;
 use Documents\User;
 
-$dm = require 'bootstrap.php';
+$boot = require 'bootstrap.php';
+$dm = $boot->getDocumentManager();
 
 // Debug::dump($dm);
 $user = new User($argv[1], $argv[2]);

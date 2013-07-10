@@ -3,10 +3,9 @@
 use Doctrine\Common\Util\Debug;
 use Documents\User;
 
-/**
- * @var DocumentManager
- */
-$dm = require 'bootstrap.php';
+$boot = require 'bootstrap.php';
+$dm = $boot->getDocumentManager();
+
 $user_repo = $dm->getRepository('Documents\User');
 
 $users = $user_repo->findBy(array('name' => $argv[1]));
