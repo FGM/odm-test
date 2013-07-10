@@ -41,6 +41,10 @@ function boot ($verbose = FALSE) {
   // $reader->setDefaultAnnotationNamespace('Doctrine\ODM\MongoDB\Mapping\\');
   $config->setMetadataDriverImpl(new AnnotationDriver($reader, __DIR__ . '/Documents'));
 
+  // Not mentioned in the docs, but used in tests and avoids autoloader errors
+  // on annotation classes.
+  AnnotationDriver::registerAnnotationClasses();
+
   $dm = DocumentManager::create(new Connection($mongo), $config);
   // Debug::dump($dm);
   // Debug::dump($dm->getUnitOfWork());
