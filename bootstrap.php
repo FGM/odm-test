@@ -1,11 +1,14 @@
 <?php
 
+use Psr\Log\LogLevel;
+
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Util\Debug;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
+use Log\D6Logger;
 use Monolog\Logger;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
@@ -13,6 +16,11 @@ use Psr\Log\LoggerInterface;
 require 'vendor/autoload.php';
 
 class Boot {
+  /**
+   * @var string
+   */
+  protected $app_name;
+
   /**
    * @var \Doctrine\ODM\MongoDB\Configuration
    */
@@ -26,14 +34,15 @@ class Boot {
   /**
    * @var \Psr\Log\LoggerInterface
    */
-  protected $logger;
+  public $logger;
 
   /**
    * @var \Mongo
    */
   protected $mongo;
 
-  public function __construct() {
+  public function __construct($app_name = NULL) {
+    $this->app_name = $this->initApp($app_name);
     $this->logger = $this->initLogger();
     $this->config = $this->initConfig();
     $this->mongo = $this->initMongo();
@@ -43,12 +52,32 @@ class Boot {
     AnnotationDriver::registerAnnotationClasses();
   }
 
+  public function __call($method, array $arguments) {
+    $psr3_methods = array(
+      'log',
+      'debug', 'info', 'notice', 'warning',
+      'error', 'critical', 'alert', 'emergency',
+    );
+    if (in_array($method, $psr3_methods)) {
+      $ret = call_user_func_array(array($this->logger, $method), $arguments);
+    }
+    else {
+      throw new ErrorException('Undefined logging method invoked.');
+    }
+    return $ret;
+  }
+
   /**
+   * Lazy instantiation of document manager.
+   *
    * @return \Doctrine\ODM\MongoDB\DocumentManager
    */
   public function getDocumentManager() {
-    $dm = DocumentManager::create(new Connection($this->mongo), $this->config);
-    return $dm;
+    if (!isset($this->documentManager)) {
+      $this->documentManager = DocumentManager::create(new Connection($this->mongo), $this->config);
+    }
+
+    return $this->documentManager;
   }
 
   /**
@@ -65,26 +94,54 @@ class Boot {
     return $this->mongo;
   }
 
+  public function initApp($app_name = NULL) {
+    if (!isset($app_name)) {
+      $app_name = basename(__DIR__);
+    }
+    return $app_name;
+  }
+
   /**
    * @return Configuration
    */
   public function initConfig() {
+    $cache_dir = __DIR__ . '/cache';
+    $db_name = 'odm';
+    $annotated_directories = array(
+      __DIR__ . '/Documents',
+    );
+
+    if (!is_dir($cache_dir)) {
+      $status = mkdir($cache_dir, 0777, TRUE);
+      if (!$status) {
+        throw new \ErrorException('Could not create cache directory.');
+      }
+    }
+
     $config = new Configuration();
-    $config->setProxyDir(__DIR__ . '/cache');
+    $config->setProxyDir($cache_dir);
     $config->setProxyNamespace('Proxies');
-    $config->setDefaultDB('odm');
-    $config->setHydratorDir(__DIR__ . '/cache');
+    $config->setDefaultDB($db_name);
+    $config->setHydratorDir($cache_dir);
     $config->setHydratorNamespace('Hydrators');
 
     $reader = new AnnotationReader();
     // $reader->setDefaultAnnotationNamespace('Doctrine\ODM\MongoDB\Mapping\\');
-    $config->setMetadataDriverImpl(new AnnotationDriver($reader, __DIR__ . '/Documents'));
+    foreach ($annotated_directories as $dir) {
+      $config->setMetadataDriverImpl(new AnnotationDriver($reader, $dir));
+    }
 
     return $config;
   }
 
   public function initLogger() {
-    $logger = new Logger('odm');
+    if (function_exists('watchdog')) {
+      $logger = new D6Logger(pathinfo(__FILE__, PATHINFO_FILENAME));
+    }
+    else {
+      $logger = new Logger($this->app_name);
+    }
+
     return $logger;
   }
 
