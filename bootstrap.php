@@ -1,7 +1,5 @@
 <?php
 
-use Psr\Log\LogLevel;
-
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Util\Debug;
 use Doctrine\MongoDB\Connection;
@@ -12,6 +10,7 @@ use Log\D6Logger;
 use Monolog\Logger;
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
+use Psr\Log\LogLevel;
 
 require 'vendor/autoload.php';
 
@@ -34,7 +33,7 @@ class Boot {
   /**
    * @var \Psr\Log\LoggerInterface
    */
-  public $logger;
+  protected $logger;
 
   /**
    * @var \Mongo

@@ -8,7 +8,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
  */
 class User {
   /**
-   * @ODM\Id()
+   * @ODM\Id
    *
    * Strategies: AUTO|ALNUM|CUSTOM|INCREMENT|UUID|NONE.
    */
@@ -25,7 +25,7 @@ class User {
   private $email;
 
   /**
-   * @ODM\ReferenceMany(targetDocument="BlogPost", cascade="all")
+   * @ODM\ReferenceMany(targetDocument="BlogPost", cascade="all", mappedBy="user")
    */
   private $posts = array();
 
