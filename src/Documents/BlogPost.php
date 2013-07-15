@@ -3,6 +3,7 @@ namespace Documents;
 
 use Doctrine\Common\Util\Debug;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Documents\User;
 
 /**
  * @ODM\Document
@@ -32,10 +33,14 @@ class BlogPost {
    * @ODM\ReferenceOne(targetDocument="User", inversedBy="posts", simple=true)
    */
   private $user;
-  // ...
 
   public function __construct($body = NULL) {
     $this->body = $body;
+    $this->createdAt = new \DateTime();
+  }
+
+  public function getUser() {
+    return $this->user;
   }
 
   public function setUser(User $user) {

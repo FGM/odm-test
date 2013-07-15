@@ -1,7 +1,10 @@
 <?php
 namespace Documents;
 
+use Doctrine\Common\Util\Debug;
+
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
+use Documents\BlogPost;
 
 /**
  * @ODM\Document
@@ -25,7 +28,7 @@ class User {
   private $email;
 
   /**
-   * @ODM\ReferenceMany(targetDocument="BlogPost", cascade="all", mappedBy="user")
+   * @ODM\ReferenceMany(targetDocument="BlogPost", inversedBy="user", cascade="all", simple=true)
    */
   private $posts = array();
 
@@ -49,5 +52,13 @@ class User {
   public function __construct($name, $email) {
     $this->setName($name);
     $this->setEmail($email);
+  }
+
+  public function getPosts() {
+    return $this->posts;
+  }
+
+  public function setPosts($posts) {
+    $this->posts = $posts;
   }
 }

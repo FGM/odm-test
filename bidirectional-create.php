@@ -19,6 +19,8 @@ $post2->setUser($user);
 $post3 = new BlogPost('troisième post');
 $post3->setUser($user);
 
+$user->setPosts(array($post1, $post2, $post3));
+
 $dm->persist($user);
 $dm->persist($post1);
 $dm->persist($post2);
