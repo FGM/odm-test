@@ -21,8 +21,18 @@ class NodeCache {
    */
   protected $title;
 
-  public function __construct($nid, $title) {
+  /**
+   * ReferenceOne(targetDocument="UserCache", simple=true)
+   */
+  protected $user;
+
+  public function __construct($nid, $title, UserCache $user) {
     $this->nid = $nid;
     $this->title = $title;
+    $this->user = $user;
+  }
+
+  public function getUser() {
+    return $this->user;
   }
 }

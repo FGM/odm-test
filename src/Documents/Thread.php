@@ -1,6 +1,8 @@
 <?php
 namespace Documents;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
@@ -13,7 +15,7 @@ class Thread {
   protected $id;
 
   /**
-   * @ODM\DateTime
+   * @ODM\Date
    */
   protected $changed;
 
@@ -23,12 +25,27 @@ class Thread {
   protected $comments;
 
   /**
-   * ODM\EmbedOne(targetDocument="NodeCache")
+   * @ODM\EmbedOne(targetDocument="NodeCache")
    */
-  protected $node;
+  protected $nodeCache;
 
   /**
    * @ODM\EmbedMany(targetDocument="UserCache")
    */
   protected $userCache;
+
+  public function __construct(NodeCache $nodeCache) {
+    $this->comments = new ArrayCollection();
+    $this->nodeCache = $nodeCache;
+    $this->userCache[] = $nodeCache->getUser();
+  }
+
+  public function addComment(Comment $comment) {
+    $this->comments[] = $comment;
+  }
+
+  /** @ODM\PrePersist */
+  public function prePersistChanged() {
+    $this->changed = new \DateTime();
+  }
 }
