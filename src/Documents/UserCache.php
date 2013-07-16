@@ -25,4 +25,8 @@ class UserCache {
     $this->uid = $uid;
     $this->name = $name;
   }
+
+  public function getId() {
+    return $this->uid;
+  }
 }

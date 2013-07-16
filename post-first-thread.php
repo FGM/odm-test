@@ -17,10 +17,10 @@ $dm = $boot->getDocumentManager();
 // Debug::dump($dm);
 
 $user = new UserCache(1, 'John Doe');
-Debug::dump($user);
+// Debug::dump($user);
 
 $node = new NodeCache(42, "Let's dance", $user);
-Debug::dump($node);
+// Debug::dump($node);
 
 $c1 = new Comment(421, 'Commentaire 1 sur le 42');
 $c2 = new Comment(4211, 'Commentaire 11 réponse au 1 sur le 42');

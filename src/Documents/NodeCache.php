@@ -1,6 +1,8 @@
 <?php
 namespace Documents;
 
+use Doctrine\ODM\MongoDB\Tests\Events\User;
+
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
@@ -22,14 +24,24 @@ class NodeCache {
   protected $title;
 
   /**
-   * ReferenceOne(targetDocument="UserCache", simple=true)
+   * @ODM\Int
+   */
+  protected $uid;
+
+  /**
+   * Not persisted.
+   *
+   * @var UserCache
    */
   protected $user;
 
-  public function __construct($nid, $title, UserCache $user) {
+
+  public function __construct($nid, $title, UserCache $userCache) {
     $this->nid = $nid;
     $this->title = $title;
-    $this->user = $user;
+    $this->uid = $userCache->getId();
+
+    $this->user = $userCache;
   }
 
   public function getUser() {
