@@ -477,12 +477,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb-odm.git",
-                "reference": "0bf89a83e8c61428b207b4ad71c079c6e5534c3e"
+                "reference": "a68f323f44a5cbe0806b9e780261a15859c31379"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/0bf89a83e8c61428b207b4ad71c079c6e5534c3e",
-                "reference": "0bf89a83e8c61428b207b4ad71c079c6e5534c3e",
+                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/a68f323f44a5cbe0806b9e780261a15859c31379",
+                "reference": "a68f323f44a5cbe0806b9e780261a15859c31379",
                 "shasum": ""
             },
             "require": {
@@ -542,7 +542,7 @@
                 "odm",
                 "persistence"
             ],
-            "time": "2013-07-04 19:12:04"
+            "time": "2013-07-15 14:47:18"
         },
         {
             "name": "monolog/monolog",
@@ -651,12 +651,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Console.git",
-                "reference": "3b58c937fc7e0dbdadd2642f21c462a0e663f0b6"
+                "reference": "c374f12670a4e6b6b72ef2a2d58b75534d94609c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Console/zipball/3b58c937fc7e0dbdadd2642f21c462a0e663f0b6",
-                "reference": "3b58c937fc7e0dbdadd2642f21c462a0e663f0b6",
+                "url": "https://api.github.com/repos/symfony/Console/zipball/c374f12670a4e6b6b72ef2a2d58b75534d94609c",
+                "reference": "c374f12670a4e6b6b72ef2a2d58b75534d94609c",
                 "shasum": ""
             },
             "require": {
@@ -695,7 +695,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "http://symfony.com",
-            "time": "2013-07-08 13:37:01"
+            "time": "2013-07-11 19:37:15"
         },
         {
             "name": "symfony/yaml",
@@ -704,12 +704,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/Yaml.git",
-                "reference": "82100c7732c95452702d11433aad50988700d36c"
+                "reference": "7a6c10b37cb4335dcca038da760f29915a374b81"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/Yaml/zipball/82100c7732c95452702d11433aad50988700d36c",
-                "reference": "82100c7732c95452702d11433aad50988700d36c",
+                "url": "https://api.github.com/repos/symfony/Yaml/zipball/7a6c10b37cb4335dcca038da760f29915a374b81",
+                "reference": "7a6c10b37cb4335dcca038da760f29915a374b81",
                 "shasum": ""
             },
             "require": {
@@ -742,7 +742,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "http://symfony.com",
-            "time": "2013-05-16 07:54:39"
+            "time": "2013-07-11 19:37:15"
         }
     ],
     "packages-dev": [
