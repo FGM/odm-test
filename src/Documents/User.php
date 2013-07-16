@@ -7,7 +7,7 @@ use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 use Documents\BlogPost;
 
 /**
- * @ODM\Document
+ * @ODM\Document(requireIndexes=true)
  */
 class User {
   /**
