@@ -45,16 +45,22 @@ class UserCache {
    * @param $uid
    * @param $username
    */
-  public function __construct($uid, $username) {
-    $this->uid = $uid;
-    $this->username = $username;
+  public function __construct($values) {
+    foreach ($values as $key => $value) {
+      $this->{$key} = $value;
+    }
   }
 
   /**
+   * @param $item
    * @return mixed
    */
-  public function getId() {
-    return $this->uid;
+  public function __get($item) {
+    $properties = get_object_vars($this);
+    if (!in_array($item, array_keys($properties))) {
+      throw new \ErrorException("Propriété $item inconnue");
+    }
+    return $this->{$item};
   }
 
   /**
@@ -69,10 +75,10 @@ class UserCache {
   }
 
   /**
-   * @param $item
    * @return mixed
    */
-  public function __get($item) {
-    return $this->{$item};
+  public function getId() {
+    return $this->uid;
   }
+
 }
