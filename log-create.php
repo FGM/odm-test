@@ -29,28 +29,3 @@ print_r($log);
 $dm->flush();
 Debug::dump($log);
 
-
-
-
-//////////////-----------------------------
-
-
-
-/*
-
-use Doctrine\Common\Util\Debug;
-use Documents\User;
-
-$boot = require 'bootstrap.php';
-$dm = $boot->getDocumentManager();
-
-// Debug::dump($dm);
-$user = new User($argv[1], $argv[2]);
-print_r($user);
-
-$dm->persist($user);
-print_r($user);
-
-$dm->flush();
-Debug::dump($user);
-*/
