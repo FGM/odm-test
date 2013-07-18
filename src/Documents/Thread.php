@@ -13,12 +13,37 @@ class Thread {
   /**
    * @ODM\Id
    */
-  protected $id;
+  protected $_id;
+
+  /**
+   * @ODM\Int
+   */
+  protected $nid;
+
+  /**
+   * @ODM\Hash
+   */
+  protected $node_uids;
+
+  /**
+   * @ODM\Hash
+   */
+  protected $gids;
+
+  /**
+   * @ODM\Date
+   */
+  protected $created;
 
   /**
    * @ODM\Date
    */
   protected $changed;
+
+  /**
+   * @ODM\String
+   */
+  protected $thread;
 
   /**
    * @ODM\EmbedMany(targetDocument="Comment")
@@ -35,11 +60,34 @@ class Thread {
    */
   protected $userCache;
 
+  /*
+   *
+   */
   public function __construct(NodeCache $nodeCache) {
     $this->comments = new ArrayCollection();
     $this->userCache = new ArrayCollection();
     $this->nodeCache = $nodeCache;
     $this->addUser($nodeCache->getUser());
+  }
+
+  /**
+   * @param $item
+   * @param $value
+   */
+  public function __set($item, $value) {
+
+    $properties = get_object_vars($this);
+    if (in_array($item, array_keys($properties))) {
+      $this->{$item} = $value;
+    }
+  }
+
+  /**
+   * @param $item
+   * @return mixed
+   */
+  public function __get($item) {
+    return $this->{$item};
   }
 
   public function addComment(Comment $comment) {
@@ -54,4 +102,7 @@ class Thread {
   public function prePersistChanged() {
     $this->changed = new \DateTime();
   }
+
+
+
 }

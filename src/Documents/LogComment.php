@@ -50,15 +50,17 @@ class LogComment {
    */
   private $ip;
 
+  /**
+   * @param $values
+   */
   public function __construct($values) {
-
-    $x = new \DateTime();
 
     $properties = get_object_vars($this);
 
-    $array_intersect = is_array($values) ? array_intersect(array_keys($properties), array_keys($values)) : array();
+    $array_intersect = is_array($values) ? array_intersect_key($values, $properties) : array();
+    //$array_intersect = is_array($values) ? array_intersect(array_keys($properties), array_keys($values)) : array();
     // La classe a aussi un $_id (autoincrement)
-    if (count($array_intersect) != (count($properties) - 1)) {
+    if (count($array_intersect) < (count($properties) - 1)) {
       throw new \ErrorException("Nombre d'elements incorect.");
     }
 
@@ -67,21 +69,23 @@ class LogComment {
     }
   }
 
+  /**
+   * @param $item
+   * @param $value
+   */
   public function __set($item, $value) {
 
     $properties = get_object_vars($this);
-    if (!in_array($item, array_keys($properties))) {
-      throw new \ErrorException('Propriété inconnue');
+    if (in_array($item, array_keys($properties))) {
+      $this->{$item} = $value;
     }
-    $this->{$item} = $value;
   }
 
+  /**
+   * @param $item
+   * @return mixed
+   */
   public function __get($item) {
-
-    $properties = get_object_vars($this);
-    if (!in_array($item, array_keys($properties))) {
-      throw new \ErrorException('Propriété inconnue');
-    }
     return $this->{$item};
   }
 }
