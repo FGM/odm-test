@@ -47,7 +47,7 @@ for ($i = 0; $i < 3; $i++) {
   $dm->persist($c);
 }
 
-// Quelques enfants.
+// Some children..
 for ($i = 3; $i <= 10; $i++) {
   $user_id = rand(30, 40);
   $user = new UserCache($user_id, 'John Doe ' . $user_id);
