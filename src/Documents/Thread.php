@@ -72,6 +72,19 @@ class Thread {
 
   /**
    * @param $item
+   * @return mixed
+   */
+  public function __get($item) {
+
+    $properties = get_object_vars($this);
+    if (!in_array($item, array_keys($properties))) {
+      throw new \ErrorException('Propriété inconnue');
+    }
+    return $this->{$item};
+  }
+
+  /**
+   * @param $item
    * @param $value
    */
   public function __set($item, $value) {
@@ -80,14 +93,6 @@ class Thread {
     if (in_array($item, array_keys($properties))) {
       $this->{$item} = $value;
     }
-  }
-
-  /**
-   * @param $item
-   * @return mixed
-   */
-  public function __get($item) {
-    return $this->{$item};
   }
 
   public function addComment(Comment $comment) {
@@ -102,7 +107,5 @@ class Thread {
   public function prePersistChanged() {
     $this->changed = new \DateTime();
   }
-
-
 
 }

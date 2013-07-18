@@ -56,7 +56,7 @@ class Comment {
   /**
    * @ODM\String
    */
-  protected $contenu;
+  protected $content;
 
   /**
    * @ODM\Hash

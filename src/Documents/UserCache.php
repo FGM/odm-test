@@ -51,10 +51,15 @@ class UserCache {
   }
 
   /**
+   * @param $item
    * @return mixed
    */
-  public function getId() {
-    return $this->uid;
+  public function __get($item) {
+    $properties = get_object_vars($this);
+    if (!in_array($item, array_keys($properties))) {
+      throw new \ErrorException('Propriété inconnue');
+    }
+    return $this->{$item};
   }
 
   /**
@@ -69,10 +74,10 @@ class UserCache {
   }
 
   /**
-   * @param $item
    * @return mixed
    */
-  public function __get($item) {
-    return $this->{$item};
+  public function getId() {
+    return $this->uid;
   }
+
 }
