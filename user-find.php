@@ -8,7 +8,9 @@ $dm = $boot->getDocumentManager();
 
 $user_repo = $dm->getRepository('Documents\User');
 
-$users = $user_repo->findBy(array('name' => $argv[1]));
+echo "Class: " . $user_repo->getClassName() . "\n";
+
+$users = $user_repo->findBy(array('username' => $argv[1]));
 foreach ($users as $user) {
-  $boot->debug("User name: " . $user->getName() . ", email: " . $user->getEmail() . "\n");
+  $boot->debug("User name: " . $user->username . ", uid: " . $user->uid . "\n");
 }

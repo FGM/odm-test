@@ -125,6 +125,13 @@ class Boot {
     $config->setHydratorDir($cache_dir);
     $config->setHydratorNamespace('Hydrators');
 
+    // The ODM defaults to 'safe' => TRUE.
+    $defaultCommitOptions = array(
+      'safe' => TRUE,
+      'fsync' => TRUE,
+    );
+    $config->setDefaultCommitOptions($defaultCommitOptions);
+
     $reader = new AnnotationReader();
     $config->setMetadataCacheImpl(new FilesystemCache($cache_dir));
     foreach ($annotated_directories as $dir) {
