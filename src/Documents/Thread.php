@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ODM\Document(db="odm", collection="threads")
+ * @ODM\Document(collection="threads", requireIndexes=true)
  */
 class Thread {
 

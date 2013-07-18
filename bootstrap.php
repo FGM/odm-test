@@ -1,6 +1,7 @@
 <?php
 
 use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\Util\Debug;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
@@ -125,7 +126,7 @@ class Boot {
     $config->setHydratorNamespace('Hydrators');
 
     $reader = new AnnotationReader();
-    // $reader->setDefaultAnnotationNamespace('Doctrine\ODM\MongoDB\Mapping\\');
+    $config->setMetadataCacheImpl(new FilesystemCache($cache_dir));
     foreach ($annotated_directories as $dir) {
       $config->setMetadataDriverImpl(new AnnotationDriver($reader, $dir));
     }
