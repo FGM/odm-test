@@ -22,18 +22,54 @@ $user = new UserCache(1, 'John Doe');
 $node = new NodeCache(42, "Let's dance", $user);
 // Debug::dump($node);
 
-$c1 = new Comment(421, 'Commentaire 1 sur le 42');
-$c2 = new Comment(4211, 'Commentaire 11 réponse au 1 sur le 42');
-$c3 = new Comment(422, 'Commentaire 2 sur le 42');
-
 $thread = new Thread($node);
 //Debug::dump($thread);
 
-$thread->addComment($c1);
-$thread->addComment($c2);
-$thread->addComment($c3);
+// Quelques parents.
+for ($i = 0; $i < 3; $i++) {
+  $user_id = rand(30, 40);
+  $user = new UserCache($user_id, 'John Doe ' . $user_id);
+  $comment = array(
+    'cid'         => $i,
+    'comment_uid' => $user_id,
+    'ip'          => '168.128.0.' . rand(21, 30),
+    'pid'         => 0,
+    'status'      => rand(0, 1),
+    'workflow'    => rand(0, 7),
+    'created'     => time(),
+    'changed'     => time(),
+    'contenu'     => 'Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec rutrum congue leo eget malesuada. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum porta. Donec rutrum congue leo eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    'note'        => array('note' => rand(0, 5), 'total' => 5),
+  );
+  $c = new Comment($comment, $user);
+  $thread->addComment($c);
+  $thread->addUser($user);
+  $dm->persist($c);
+}
 
-foreach (array('user', 'node', 'c1', 'c2', 'c3', 'thread') as $var) {
+// Quelques enfants.
+for ($i = 3; $i <= 10; $i++) {
+  $user_id = rand(30, 40);
+  $user = new UserCache($user_id, 'John Doe ' . $user_id);
+  $comment = array(
+    'cid'         => rand(3, 10),
+    'comment_uid' => $user_id,
+    'ip'          => '168.128.0.' . rand(21, 30),
+    'pid'         => rand(0, 2),
+    'status'      => rand(0, 1),
+    'workflow'    => rand(0, 7),
+    'created'     => time(),
+    'changed'     => time(),
+    'contenu'     => 'Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec rutrum congue leo eget malesuada. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum porta. Donec rutrum congue leo eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    'note'        => array('note' => rand(0, 5), 'total' => 5),
+  );
+  $c = new Comment($comment, $user);
+  $thread->addComment($c);
+  $thread->addUser($user);
+  $dm->persist($c);
+}
+
+foreach (array('user', 'node', 'thread') as $var) {
   echo "Persisting $var\n";
   $dm->persist($$var);
 }

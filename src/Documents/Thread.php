@@ -6,9 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 /**
- * @ODM\Document
+ * @ODM\Document(db="odm", collection="threads")
  */
 class Thread {
+
   /**
    * @ODM\Id
    */
@@ -36,12 +37,17 @@ class Thread {
 
   public function __construct(NodeCache $nodeCache) {
     $this->comments = new ArrayCollection();
+    $this->userCache = new ArrayCollection();
     $this->nodeCache = $nodeCache;
-    $this->userCache[] = $nodeCache->getUser();
+    $this->addUser($nodeCache->getUser());
   }
 
   public function addComment(Comment $comment) {
     $this->comments[] = $comment;
+  }
+
+  public function addUser(UserCache $user) {
+    $this->userCache[] = $user;
   }
 
   /** @ODM\PrePersist */
