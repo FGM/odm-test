@@ -2,6 +2,7 @@
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\FilesystemCache;
+use Doctrine\Common\EventManager;
 use Doctrine\Common\Util\Debug;
 use Doctrine\MongoDB\Connection;
 use Doctrine\ODM\MongoDB\Configuration;
@@ -74,7 +75,8 @@ class Boot {
    */
   public function getDocumentManager() {
     if (!isset($this->documentManager)) {
-      $this->documentManager = DocumentManager::create(new Connection($this->mongo), $this->config);
+      $em = new EventManager();
+      $this->documentManager = DocumentManager::create(new Connection($this->mongo), $this->config, $em);
     }
 
     return $this->documentManager;
