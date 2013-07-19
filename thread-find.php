@@ -175,31 +175,35 @@ function get_20_comments($boot, $dm, $uid, $base = 0) {
 }
 
 function get_comments_count_by_nid($boot, $dm, $nid) {
-  $threads = $dm->createQueryBuilder('Documents\Thread')
-    ->field("nid")
-    ->equals((int) $nid)
-    ->select('comments', 'nodeCache')
+  $count_query = $dm->createQueryBuilder('Documents\Thread')
+    ->group(array('nid' => 1, 'nodeCache' => 0), array('count' => 0))
+    ->reduce(<<<JS
+    function (curr, result) {
+      result.count += curr.comments.length;
+    }
+JS
+    )
+    ->field('nid')->equals((int) $nid)
     ->getQuery()
     ->execute();
 
-  // i'll try to get the get with a proper query.
-  $counts = 0;
-  foreach ($threads as $thread) {
-    $node = $thread->nodeCache;
-    $counts += count($thread->comments);
-  }
-  echo "================================================\n";
-  echo <<<EOF
-Title: {$node->title},
-Uid: {$node->uid},
-Url: {$node->url},
-Rubrique: {$node->rubrique}
-Comments count: $counts
+  if (!empty($count_query['count'])) {
+    $values = $count_query['retval'];
+    $value = reset($values);
+    echo "================================================\n";
+    echo <<<EOF
+Nid:            {$value['nid']}
+Title:          {$value['nodeCache']['title']}
+Uid:            {$value['nodeCache']['uid']}
+Url:            {$value['nodeCache']['url']}
+Rubrique:       {$value['nodeCache']['rubrique']}
+Comments count: {$value['count']}
 EOF;
-  echo "\n================================================\n";
-
-
-
+    echo "\n================================================\n";
+  }
+  else {
+    echo "No comments found for this node.\n";
+  }
 }
 
 /*

@@ -19,7 +19,7 @@ class Comment {
   protected $cid;
 
   /**
-  * @ODM\Int @Index(unique=true, background=true)
+  * @ODM\Int
   */
   protected $comment_uid;
 
