@@ -178,9 +178,9 @@ function get_comments_count_by_nid($boot, $dm, $nid) {
   $count_query = $dm->createQueryBuilder('Documents\Thread')
     ->group(array('nid' => 1, 'nodeCache' => 0), array('count' => 0))
     ->reduce(<<<JS
-    function (curr, result) {
-      result.count += curr.comments.length;
-    }
+function (curr, result) {
+  result.count += curr.comments.length;
+}
 JS
     )
     ->field('nid')->equals((int) $nid)
