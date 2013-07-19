@@ -156,7 +156,7 @@ class Boot {
 
   public function initMongo() {
     // URL: mongodb://[username:password@]host1[:port1][,host2[:port2:],...]/db
-    $mongo = new Mongo('mongodb://figaro:2hot4U@mongo1');
+    $mongo = new Mongo();
     return $mongo;
   }
 
