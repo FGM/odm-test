@@ -1,0 +1,117 @@
+{
+  "_id": ObjectId("51e8fb37e837a02b1e65a5eb"),
+"changed": ISODate("2013-07-19T08:39:19Z"),
+"comments": [{
+"_id": ObjectId("51e8fb38e837a02b1e65a5ec"),
+"cid": 12775,
+"comment_uid": 6030,
+"ip": "168.128.0.26",
+"pid": 0,
+"status": true,
+"workflow": 2,
+"created": ISODate("2013-07-19T08:39:19Z"),
+"changed": ISODate("2013-07-19T08:39:19Z"),
+"content": "Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec rutrum congue leo eget malesuada. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum porta. Donec rutrum congue leo eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+"note": {
+"note": 5,
+"total": 5
+}
+}, {
+"_id": ObjectId("51e8fb38e837a02b1e65a5ed"),
+"cid": 12776,
+"comment_uid": 8722,
+"ip": "168.128.0.26",
+"pid": 12775,
+"status": false,
+"workflow": 1,
+"created": ISODate("2013-07-19T08:39:19Z"),
+"changed": ISODate("2013-07-19T08:39:19Z"),
+"content": "Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec rutrum congue leo eget malesuada. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum porta. Donec rutrum congue leo eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+"note": {
+"note": 5,
+"total": 5
+}
+}, {
+"_id": ObjectId("51e8fb38e837a02b1e65a5ee"),
+"cid": 12777,
+"comment_uid": 8930,
+"ip": "168.128.0.21",
+"pid": 12776,
+"status": false,
+"workflow": 6,
+"created": ISODate("2013-07-19T08:39:19Z"),
+"changed": ISODate("2013-07-19T08:39:19Z"),
+"content": "Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec rutrum congue leo eget malesuada. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum porta. Donec rutrum congue leo eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+"note": {
+"note": 4,
+"total": 5
+}
+}, {
+"_id": ObjectId("51e8fb38e837a02b1e65a5ef"),
+"cid": 12778,
+"comment_uid": 8708,
+"ip": "168.128.0.24",
+"pid": 12776,
+"status": false,
+"workflow": 1,
+"created": ISODate("2013-07-19T08:39:19Z"),
+"changed": ISODate("2013-07-19T08:39:19Z"),
+"content": "Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec rutrum congue leo eget malesuada. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum porta. Donec rutrum congue leo eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+"note": {
+"note": 3,
+"total": 5
+}
+}],
+"created": ISODate("2013-07-19T08:39:19Z"),
+"gids": {},
+"nid": 4051,
+"nodeCache": {
+"nid": 4051,
+"title": "node_title_4051",
+"uid": "8973",
+"remote_id": "620765fa0f38163f461864ece071d6ca0e02c87b",
+"appid": "ab165cb90d19598f610a669dfe4798f4cd049a6a",
+"url": "url_node_4051",
+"rubrique": "Sport"
+},
+"node_uids": {
+"0": 8973
+},
+"thread": "",
+"userCache": [{
+"uid": 8973,
+"username": "node_author_name_8973",
+"avatar": "node_author_url_avatar_8973",
+"url_page_perso": "node_author_url_page_perso_8973",
+"abonne": true,
+"journaliste": false
+}, {
+"uid": 6030,
+"username": "thread_owner_name_6030",
+"avatar": "thread_owner_url_avatar_6030",
+"url_page_perso": "thread_owner_url_page_perso_6030",
+"abonne": false,
+"journaliste": false
+}, {
+"uid": 8722,
+"username": "comment_owner_name_8722",
+"avatar": "comment_owner_url_avatar_8722",
+"url_page_perso": "comment_owner_url_page_perso_8722",
+"abonne": true,
+"journaliste": true
+}, {
+"uid": 8930,
+"username": "comment_owner_name_8930",
+"avatar": "comment_owner_url_avatar_8930",
+"url_page_perso": "comment_owner_url_page_perso_8930",
+"abonne": true,
+"journaliste": false
+}, {
+"uid": 8708,
+"username": "comment_owner_name_8708",
+"avatar": "comment_owner_url_avatar_8708",
+"url_page_perso": "comment_owner_url_page_perso_8708",
+"abonne": true,
+"journaliste": true
+}]
+}
