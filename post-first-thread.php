@@ -22,7 +22,15 @@ $user = new UserCache(1, 'John Doe');
 $node = new NodeCache(42, "Let's dance", $user);
 // Debug::dump($node);
 
-$thread = new Thread($node);
+$thread_sample = array(
+  'nid'       => 42,
+  'node_uids' => array(1),
+  'gids'      => array(),
+  'created'   => time(),
+  'changed'   => time(),
+  'thread'    => ''
+);
+$thread = new Thread($thread_sample, $node);
 //Debug::dump($thread);
 
 // Quelques parents.
