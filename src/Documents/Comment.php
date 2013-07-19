@@ -19,7 +19,7 @@ class Comment {
   protected $cid;
 
   /**
-  * @ODM\Int
+  * @ODM\Int @Index(unique=true, background=true)
   */
   protected $comment_uid;
 
@@ -82,7 +82,7 @@ class Comment {
 
     $properties = get_object_vars($this);
     if (!in_array($item, array_keys($properties))) {
-      throw new \ErrorException('Propriété inconnue');
+      throw new \ErrorException("Propriété $item inconnue");
     }
     return $this->{$item};
   }

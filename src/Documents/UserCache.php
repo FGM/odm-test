@@ -45,9 +45,10 @@ class UserCache {
    * @param $uid
    * @param $username
    */
-  public function __construct($uid, $username) {
-    $this->uid = $uid;
-    $this->username = $username;
+  public function __construct($values) {
+    foreach ($values as $key => $value) {
+      $this->{$key} = $value;
+    }
   }
 
   /**
@@ -57,7 +58,7 @@ class UserCache {
   public function __get($item) {
     $properties = get_object_vars($this);
     if (!in_array($item, array_keys($properties))) {
-      throw new \ErrorException('Propriété inconnue');
+      throw new \ErrorException("Propriété $item inconnue");
     }
     return $this->{$item};
   }

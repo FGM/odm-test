@@ -17,7 +17,7 @@ function attemptQuery(Query $query, $shouldThrow) {
       ? "No exception thrown, but it should have.\n"
       : "No exception thrown, as expected.\n";
     foreach ($users as $user) {
-      echo "Name: " . $user->getName() . ", mail: " . $user->getEmail() . "\n";
+      echo "Name: " . $user->nid; //  ", mail: " . $user->getEmail() . "\n";
     }
   }
   catch (MongoDBException $e) {
@@ -40,8 +40,8 @@ $dm = $boot->getDocumentManager();
 
 // Create a query on an unindexed collection requiring indexes to query.
 $qb = $dm->createQueryBuilder('Documents\Thread')
-  ->field('name')
-  ->equals(new \MongoRegex('/ar/'));
+  ->field('nid')
+  ->in(array(3426));
 $query = $qb->getQuery();
 
 // Verify that the query is not indexed.
