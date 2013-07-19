@@ -8,31 +8,27 @@ $dm = $boot->getDocumentManager();
 
 $log = $dm->getRepository('Documents\LogComment')->findOneBy(array('uid' => (int) $argv[1]));
 
-var_dump($argv[1]);
-var_dump($log);
 
 if (!$log) {
-  echo 'Log inexistant pour les critieres selectiones.';
-  return FALSE;
+  die('Log inexistant pour les critères sélectionnés.');
 }
 
 // Recuperer l'id pour pouvoir tester l'existance après la suppresion.
 $lid = $log->_id;
 
-var_dump($lid);
+Debug::dump('Lid ' . $lid);
 $dm->remove($log);
 $dm->flush();
 
 $boot2 = new Boot();
 
 $dm2 = $boot->getDocumentManager();
-$log2 = $dm->getRepository('Documents\LogComment')->findOneBy(array('_id' => $lid));
-
+$log2 = $dm2->find('Documents\LogComment', $lid);
 
 if (is_null($log2)) {
-  echo 'Log supprimé';
+  Debug::dump('Log supprimé');
 }
 else {
-  echo 'Erreur pendant la suppresion du Log';
+  Debug::dump('Erreur pendant la suppresion du Log');
 }
 
