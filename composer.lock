@@ -477,12 +477,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/mongodb-odm.git",
-                "reference": "a68f323f44a5cbe0806b9e780261a15859c31379"
+                "reference": "f24c23d2e181dc2dd789ed2077ebe0c959e6a507"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/a68f323f44a5cbe0806b9e780261a15859c31379",
-                "reference": "a68f323f44a5cbe0806b9e780261a15859c31379",
+                "url": "https://api.github.com/repos/doctrine/mongodb-odm/zipball/f24c23d2e181dc2dd789ed2077ebe0c959e6a507",
+                "reference": "f24c23d2e181dc2dd789ed2077ebe0c959e6a507",
                 "shasum": ""
             },
             "require": {
@@ -542,7 +542,7 @@
                 "odm",
                 "persistence"
             ],
-            "time": "2013-07-15 14:47:18"
+            "time": "2013-07-17 13:49:45"
         },
         {
             "name": "monolog/monolog",

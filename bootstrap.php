@@ -135,7 +135,9 @@ class Boot {
     $config->setDefaultCommitOptions($defaultCommitOptions);
 
     $reader = new AnnotationReader();
-    $config->setMetadataCacheImpl(new FilesystemCache($cache_dir));
+    $cache = new FilesystemCache($cache_dir);
+    $cache->setNamespace('odm-test-myinstance');
+    $config->setMetadataCacheImpl($cache);
     foreach ($annotated_directories as $dir) {
       $config->setMetadataDriverImpl(new AnnotationDriver($reader, $dir));
     }
