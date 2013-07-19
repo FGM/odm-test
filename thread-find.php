@@ -177,7 +177,12 @@ function get_20_comments($boot, $dm, $uid, $base = 0) {
 function get_comments_count_by_nid($boot, $dm, $nid) {
   $count_query = $dm->createQueryBuilder('Documents\Thread')
     ->group(array('nid' => 1, 'nodeCache' => 0), array('count' => 0))
-    ->reduce('function (curr, result) { result.count += curr.comments.length; }')
+    ->reduce(<<<JS
+    function (curr, result) {
+      result.count += curr.comments.length;
+    }
+JS
+    )
     ->field('nid')->equals((int) $nid)
     ->getQuery()
     ->execute();
