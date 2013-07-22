@@ -19,43 +19,44 @@ use Documents\NodeCache;
 use Documents\UserCache;
 
 
-$amount_to_create = isset($argv[1]) ? $argv[1] : 1;
+echo "================================================\n";
+echo "How many thread do you want to create ? : \n";
+$handle = fopen ("php://stdin","r");
+$amount_to_create = is_int(trim(fgets($handle))) | 1;
+
+echo "================================================\n";
+echo "How many comments by thread do you want to create ? : \n";
+$handle = fopen ("php://stdin","r");
+$answers_number = trim(fgets($handle)) | 20;
+
+echo "================================================\n";
+echo "Do you need first level's answers only ? (y/n) : \n";
+$handle = fopen ("php://stdin","r");
+$first_level_only = trim(fgets($handle)) == 'y' ? TRUE : FALSE;
+
 $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 for ($t = 0; $t < $amount_to_create; $t++) {
   echo "Creating thread " . ($t + 1) . "\n";
-  createSample($dm);
+  create_thread($dm, $answers_number, $first_level_only);
 }
 
-function createSample($dm) {
-  $comments_posted = array();
-  $rubrique = array('Actu', 'Eco', 'Politique', 'Sport', 'Hight-Tech');
+/**
+ * Création d'un thread.
+ *
+ * @param $dm
+ */
+function create_thread($dm, $answers_number, $first_level_only) {
+
+  // Création node et de son auteur.
   $node_author_uid = rand(6000, 9000);
-  $node_author = array(
-    'uid'             => $node_author_uid,
-    'username'        => "node_author_name_$node_author_uid",
-    'avatar'          => "node_author_url_avatar_$node_author_uid",
-    'url_page_perso'  => "node_author_url_page_perso_$node_author_uid",
-    'abonne'          => rand(0, 1),
-    'journaliste'     => rand(0, 1),
-  );
-  $user = new UserCache($node_author);
-
+  $user = create_user($dm, $node_author_uid, 'node_author');
   $node_sample_nid = rand(3000, 4500);
-  $node_sample = array(
-    'nid'       => $node_sample_nid,
-    'title'     => "node_title_$node_sample_nid",
-    'uid'       => $node_author_uid,
-    'remote_id' => sha1("_remote_id_$node_sample_nid"),
-    'appid'     => sha1(rand(2000, 2010)),
-    'url'       => "url_node_$node_sample_nid",
-    'rubrique'  => $rubrique[rand(0, 4)],
-  );
+  $node = create_node($dm, $node_sample_nid, $user);
+  // Debug::dump($node);
 
-  $node = new NodeCache($node_sample, $user);
-// Debug::dump($node);
-
+  // Création du thread.
   $thread_sample = array(
     'nid'       => $node_sample_nid,
     'node_uids' => array($node_author_uid),
@@ -65,26 +66,87 @@ function createSample($dm) {
     'thread'    => ''
   );
   $thread = new Thread($thread_sample, $node);
-//Debug::dump($thread);
+  //Debug::dump($thread);
 
-// Commentaire parent.
-  $thread_owner_uid = rand(6000, 9000);
-  $thread_owner = array(
-    'uid'             => $thread_owner_uid,
-    'username'        => "thread_owner_name_$thread_owner_uid",
-    'avatar'          => "thread_owner_url_avatar_$thread_owner_uid",
-    'url_page_perso'  => "thread_owner_url_page_perso_$thread_owner_uid",
+  // Commentaire parent.
+  $thread_owner_cid = rand(12000, 15000);
+  create_comment($dm, $thread, rand(6000, 9000), "thread_owner", $thread_owner_cid, TRUE);
+
+  // Quelques enfants.
+  for ($i = $thread_owner_cid + 1; $i < $thread_owner_cid + $answers_number; $i++) {
+    create_comment($dm, $thread, rand(6000, 9000), "comment_owner", $i, $first_level_only);
+  }
+
+  $dm->persist($thread);
+  $dm->flush();
+}
+
+/**
+ * Création d'un node.
+ *
+ * @param $nid
+ * @param $user
+ * @return NodeCache
+ */
+function create_node($dm, $nid, $user) {
+  $rubrique = array('Actu', 'Eco', 'Politique', 'Sport', 'Hight-Tech');
+  $node_sample = array(
+    'nid'       => $nid,
+    'title'     => "node_title_$nid",
+    'uid'       => $user->uid,
+    'remote_id' => sha1("_remote_id_$nid"),
+    'appid'     => sha1(rand(2000, 2010)),
+    'url'       => "url_node_$nid",
+    'rubrique'  => $rubrique[rand(0, 4)],
+  );
+  $node = new NodeCache($node_sample, $user);
+  $dm->persist($node);
+  return $node;
+}
+
+/**
+ * Création d'un utilisateur.
+ *
+ * @param $dm
+ * @param $uid
+ * @param string $prefix
+ * @param bool $insert
+ * @return UserCache
+ */
+function create_user($dm, $uid, $prefix = '') {
+  $user_sample = array(
+    'uid'             => $uid,
+    'username'        => $prefix . "_name_" . $uid,
+    'avatar'          => $prefix . "_url_avatar_" . $uid,
+    'url_page_perso'  => $prefix . "_url_page_perso_" . $uid,
     'abonne'          => rand(0, 1),
     'journaliste'     => rand(0, 1),
   );
-  $user = new UserCache($thread_owner);
 
-  $thread_owner_cid = rand(12000, 15000);
+  $user = new UserCache($user_sample);
+  $dm->persist($user);
+  return $user;
+}
+
+/**
+ * Création d'un commentaire.
+ *
+ * @param $dm
+ * @param $thread
+ * @param $uid
+ * @param $prefix
+ * @param $cid
+ * @param bool $pid
+ */
+function create_comment($dm, $thread, $uid, $prefix, $cid, $parent = FALSE) {
+  static $comments_posted = array();
+
+  $user = create_user($dm, $uid, $prefix);
   $comment_sample = array(
-    'cid'         => $thread_owner_cid,
-    'comment_uid' => $thread_owner_uid,
+    'cid'         => $cid,
+    'comment_uid' => $uid,
     'ip'          => '168.128.0.' . rand(21, 30),
-    'pid'         => 0,
+    'pid'         => !$parent ? $comments_posted[rand(0, count($comments_posted) -1)]['cid'] : (empty($comments_posted) ? 0 : $comments_posted[0]['cid']),
     'status'      => rand(0, 1),
     'workflow'    => rand(0, 7),
     'created'     => time(),
@@ -97,41 +159,14 @@ function createSample($dm) {
   $thread->addComment($c);
   $thread->addUser($user);
   $dm->persist($c);
+}
 
-  // Quelques enfants.
-  for ($i = $thread_owner_cid + 1; $i < $thread_owner_cid + rand(0, 11); $i++) {
-    $comment_owner_uid =  rand(6000, 9000);
-    $user_sample = array(
-      'uid'             => $comment_owner_uid,
-      'username'        => "comment_owner_name_$comment_owner_uid",
-      'avatar'          => "comment_owner_url_avatar_$comment_owner_uid",
-      'url_page_perso'  => "comment_owner_url_page_perso_$comment_owner_uid",
-      'abonne'          => rand(0, 1),
-      'journaliste'     => rand(0, 1),
-    );
-    $user = new UserCache($user_sample);
-    $comment_sample = array(
-      'cid'         => $i,
-      'comment_uid' => $comment_owner_uid,
-      'ip'          => '168.128.0.' . rand(21, 30),
-      'pid'         => $comments_posted[rand(0, count($comments_posted) -1)]['cid'],
-      'status'      => rand(0, 1),
-      'workflow'    => rand(0, 7),
-      'created'     => time(),
-      'changed'     => time(),
-      'content'     => 'Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Donec rutrum congue leo eget malesuada. Donec sollicitudin molestie malesuada. Cras ultricies ligula sed magna dictum porta. Donec rutrum congue leo eget malesuada. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur non nulla sit amet nisl tempus convallis quis ac lectus. Proin eget tortor risus. Curabitur aliquet quam id dui posuere blandit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-      'note'        => array('note' => rand(0, 5), 'total' => 5),
-    );
-    $comments_posted[] = $comment_sample;
-    $c = new Comment($comment_sample, $user);
-    $thread->addComment($c);
-    $thread->addUser($user);
-    $dm->persist($c);
-  }
-
-  foreach (array('user', 'node', 'thread') as $var) {
-    $dm->persist($$var);
-  }
-
-  $dm->flush();
+/**
+ * @todo construction du thread pour un commentaire.
+ *
+ * @param $parent_id
+ * @param $comment_posted
+ */
+function get_thread_path($parent_id, $comment_posted) {
+  // ...
 }
