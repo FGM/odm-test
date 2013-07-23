@@ -6,7 +6,7 @@
  * User: malek
  * Date: 18/07/13
  * Time: 11:45
- * IDE:  JetBrains PhpStorm
+ * IDE: JetBrains PhpStorm
  */
 
 use Doctrine\Common\Util\Debug;
@@ -86,6 +86,15 @@ EOF;
       echo "Which node comments count are ou interrested in ? ";
       get_comments_count_by_nid($boot, $dm, trim(fgets($handle)));
       return end_demo();
+      break;
+
+    case 5:
+      echo "Which node comments count are ou interrested in ? ";
+      get_comments_count_by_nid($boot, $dm, trim(fgets($handle)));
+      return end_demo();
+      break;
+
+
     default;
       return FALSE;
   }
@@ -181,7 +190,7 @@ function get_comments_count_by_nid($boot, $dm, $nid) {
     ->group(array('nid' => 1, 'nodeCache' => 0), array('count' => 0))
     ->reduce(<<<JS
 function (curr, result) {
-  result.count += curr.comments.length;
+result.count += curr.comments.length;
 }
 JS
     )
@@ -194,11 +203,11 @@ JS
     $value = reset($values);
     echo "================================================\n";
     echo <<<EOF
-Nid:            {$value['nid']}
-Title:          {$value['nodeCache']['title']}
-Uid:            {$value['nodeCache']['uid']}
-Url:            {$value['nodeCache']['url']}
-Rubrique:       {$value['nodeCache']['rubrique']}
+Nid: {$value['nid']}
+Title: {$value['nodeCache']['title']}
+Uid: {$value['nodeCache']['uid']}
+Url: {$value['nodeCache']['url']}
+Rubrique: {$value['nodeCache']['rubrique']}
 Comments count: {$value['count']}
 EOF;
     echo "\n================================================\n";
@@ -208,35 +217,73 @@ EOF;
   }
 }
 
+/**
+ * @param $dm
+ *   DocumentManager Object
+ * @param $wf
+ *   Workflow value
+ * @param DateTime $start
+ * @param DateTime $end
+ */
+
+
+//$date_2013_07_22 = DateTime::createFromFormat('d-m-Y H:i:s', '22-07-2013 23:59:59');
+//$date_2013_07_24 = DateTime::createFromFormat('d-m-Y H:i:s', '22-07-2013 23:59:59');
+function get_comments_by_wf_on_interval($dm, $wf, DateTime $start, DateTime $end) {
+
+  $threads = $dm->createQueryBuilder('Documents\Thread')
+    ->field("comments.workflow")->equals((int) $wf)
+    ->field('comments.created')->gte($start)
+    ->field('comments.created')->lte($end)
+    ->getQuery()
+    ->execute();
+
+  foreach ($threads as $thread) {
+    foreach ($thread->comments as $comment) {
+
+      // TODO - a voir verification supplementaire ???
+      if ($comment->workflow == $wf) {
+        echo "Cid: " . $comment->cid . " || ";
+        echo "uid: " . $comment->comment_uid . " \t|| ";
+        echo "Ip: " . $comment->ip . " \t|| ";
+        echo "Pid: " . $comment->pid . " \t|| ";
+        echo "Status: " . ($comment->status ? 1 : 0) . " \t|| ";
+        echo "Workflow: " . $comment->workflow . " \t|| ";
+        echo "Created: " . $comment->created->format('Y-m-d H:i:s') . "\n";
+      }
+    }
+  }
+}
+
 /*
 {
-  "_id": ObjectId("51e802efe837a0c33bd83620"),
-  "changed": ISODate("2013-07-18T14:59:59Z"),
-  "comments":
-  [
-    { "_id": ObjectId("51e802efe837a0c33bd83621"), "cid": 12106, "comment_uid": 8211, "ip": "168.128.0.24", "pid": 0, "status": false, "workflow": 6, "created": ISODate("2013-07-18T14:59:59Z"), "changed": ISODate("2013-07-18T14:59:59Z"), "note": { "note": 5, "total": 5 } },
-    { "_id": ObjectId("51e802efe837a0c33bd83622"), "cid": 12107, "comment_uid": 8089, "ip": "168.128.0.23", "pid": 12106, "status": true, "workflow": 5, "created": ISODate("2013-07-18T14:59:59Z"), "changed": ISODate("2013-07-18T14:59:59Z"), "note": { "note": 1, "total": 5 } },
-    { "_id": ObjectId("51e802efe837a0c33bd83623"), "cid": 12108, "comment_uid": 8310, "ip": "168.128.0.25", "pid": 12107, "status": true, "workflow": 3, "created": ISODate("2013-07-18T14:59:59Z"), "changed": ISODate("2013-07-18T14:59:59Z"), "note": { "note": 4, "total": 5 } }
-  ],
-  "created": ISODate("2013-07-18T14:59:59Z"),
-  "gids": {},
-  "nid": 3925,
-  "nodeCache": {
-  "nid": 3925,
-    "title": "node_title_3925",
-    "uid": "8160",
-    "remote_id": "85765261099228e264ed02a8c215bf3d3d162075",
-    "appid": "a4ac914c09d7c097fe1f4f96b897e625b6922069",
-    "url": "url_node_3925",
-    "rubrique": "Eco"
-  },
-  "node_uids": {"0": 8160},
-  "thread": "",
-  "userCache": [
-    { "uid": 8160, "username": "node_author_name_8160", "avatar": "node_author_url_avatar_8160", "url_page_perso": "node_author_url_page_perso_8160", "abonne": false, "journaliste": true },
-    { "uid": 8211, "username": "thread_owner_name_8211", "avatar": "thread_owner_url_avatar_8211", "url_page_perso": "thread_owner_url_page_perso_8211", "abonne": true, "journaliste": false },
-    { "uid": 8089, "username": "thread_owner_name_8089", "avatar": "thread_owner_url_avatar_8089", "url_page_perso": "thread_owner_url_page_perso_8089", "abonne": false, "journaliste": true },
-    { "uid": 8310, "username": "thread_owner_name_8310", "avatar": "thread_owner_url_avatar_8310", "url_page_perso": "thread_owner_url_page_perso_8310", "abonne": false, "journaliste": true }
-  ]
+"_id": ObjectId("51e802efe837a0c33bd83620"),
+"changed": ISODate("2013-07-18T14:59:59Z"),
+"comments":
+[
+{ "_id": ObjectId("51e802efe837a0c33bd83621"), "cid": 12106, "comment_uid": 8211, "ip": "168.128.0.24", "pid": 0, "status": false, "workflow": 6, "created": ISODate("2013-07-18T14:59:59Z"), "changed": ISODate("2013-07-18T14:59:59Z"), "note": { "note": 5, "total": 5 } },
+{ "_id": ObjectId("51e802efe837a0c33bd83622"), "cid": 12107, "comment_uid": 8089, "ip": "168.128.0.23", "pid": 12106, "status": true, "workflow": 5, "created": ISODate("2013-07-18T14:59:59Z"), "changed": ISODate("2013-07-18T14:59:59Z"), "note": { "note": 1, "total": 5 } },
+{ "_id": ObjectId("51e802efe837a0c33bd83623"), "cid": 12108, "comment_uid": 8310, "ip": "168.128.0.25", "pid": 12107, "status": true, "workflow": 3, "created": ISODate("2013-07-18T14:59:59Z"), "changed": ISODate("2013-07-18T14:59:59Z"), "note": { "note": 4, "total": 5 } }
+],
+"created": ISODate("2013-07-18T14:59:59Z"),
+"gids": {},
+"nid": 3925,
+"nodeCache": {
+"nid": 3925,
+"title": "node_title_3925",
+"uid": "8160",
+"remote_id": "85765261099228e264ed02a8c215bf3d3d162075",
+"appid": "a4ac914c09d7c097fe1f4f96b897e625b6922069",
+"url": "url_node_3925",
+"rubrique": "Eco"
+},
+"node_uids": {"0": 8160},
+"thread": "",
+"userCache": [
+{ "uid": 8160, "username": "node_author_name_8160", "avatar": "node_author_url_avatar_8160", "url_page_perso": "node_author_url_page_perso_8160", "abonne": false, "journaliste": true },
+{ "uid": 8211, "username": "thread_owner_name_8211", "avatar": "thread_owner_url_avatar_8211", "url_page_perso": "thread_owner_url_page_perso_8211", "abonne": true, "journaliste": false },
+{ "uid": 8089, "username": "thread_owner_name_8089", "avatar": "thread_owner_url_avatar_8089", "url_page_perso": "thread_owner_url_page_perso_8089", "abonne": false, "journaliste": true },
+{ "uid": 8310, "username": "thread_owner_name_8310", "avatar": "thread_owner_url_avatar_8310", "url_page_perso": "thread_owner_url_page_perso_8310", "abonne": false, "journaliste": true }
+]
 }
 */
