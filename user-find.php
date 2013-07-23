@@ -1,12 +1,12 @@
 <?php
 
 use Doctrine\Common\Util\Debug;
-use Documents\User;
+use Figaro\Premium\Comments\Documents\User;
 
 $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
-$user_repo = $dm->getRepository('Documents\User');
+$user_repo = $dm->getRepository(Boot::getDocumentClass('User'));
 
 echo "Class: " . $user_repo->getClassName() . "\n";
 

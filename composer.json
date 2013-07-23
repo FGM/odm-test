@@ -1,13 +1,20 @@
 {
     "require": {
         "doctrine/mongodb-odm": "1.*",
-        "symfony/yaml": "2.*",
-        "monolog/monolog": "1.5.0"
+        "monolog/monolog": "*",
+        "psr/log": "*",
+        "OSInet/fpcomments": "*"
     },
     "autoload": {
         "psr-0": {
             "": "src/"
         }
     },
+    "repositories": [
+      {
+        "type": "git",
+        "url": "git@github.com:OSInet/fpcomments"
+      }
+    ],
     "minimum-stability": "dev"
 }

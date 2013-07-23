@@ -3,7 +3,7 @@
 use Doctrine\Common\EventManager;
 use Doctrine\ODM\MongoDB\Events;
 use Doctrine\ODM\MongoDB\Event\LifecycleEventArgs;
-use Documents\User;
+use Figaro\Premium\Comments\Documents\User;
 
 $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();

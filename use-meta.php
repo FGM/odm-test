@@ -4,10 +4,8 @@
  * Demonstrates how to use class metadata from userland code.
  */
 
-namespace Documents;
-
 use Doctrine\Common\Util\Debug;
-use Documents\User;
+use Figaro\Premium\Comments\Documents\User;
 
 function dump_mapping($mapping) {
   $ret = array();
@@ -25,7 +23,7 @@ $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 $mdf = $dm->getMetadataFactory();
-$threadClass = $mdf->getMetadatafor('Documents\Thread');
+$threadClass = $mdf->getMetadatafor(Boot::getDocumentClass('Thread'));
 // Debug::dump($threadClass->fieldMappings);
 
 foreach ($threadClass->fieldMappings as $fieldName => $fieldMapping) {

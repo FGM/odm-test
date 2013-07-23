@@ -14,6 +14,8 @@ use Doctrine\Common\Util\Debug;
 $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
+const THREAD_CLASS = 'Figaro\Premium\Comments\Documents\Thread';
+
 echo "Welcome to the query builder interface:\n";
 while (!$choose = prompt_choice($boot, $dm)) {
 // .. Nothing here.
@@ -96,7 +98,7 @@ function end_demo() {
 }
 
 function get_20_last_threads($boot, $dm) {
-  $threads = $dm->createQueryBuilder('Documents\Thread')
+  $threads = $dm->createQueryBuilder(THREAD_CLASS)
     ->select('_id', 'nid', 'rubrique', 'created', 'comments', 'nodeCache')
     ->sort('created', 'desc')
     ->limit(20)
@@ -117,7 +119,7 @@ function get_20_users($boot, $dm, $base = 0) {
   $limit = 20;
   $cap = $base + $limit;
 
-  $threads = $dm->createQueryBuilder('Documents\Thread')
+  $threads = $dm->createQueryBuilder(THREAD_CLASS)
     ->select('userCache')
     ->getQuery()
     ->execute();
@@ -146,7 +148,7 @@ function get_20_comments($boot, $dm, $uid, $base = 0) {
   $limit = 20;
   $cap = $base + $limit;
 
-  $threads = $dm->createQueryBuilder('Documents\Thread')
+  $threads = $dm->createQueryBuilder(THREAD_CLASS)
     ->field("comments.comment_uid")
     ->in(array((int) $uid))
     ->select('comments', 'nodeCache')
@@ -175,7 +177,7 @@ function get_20_comments($boot, $dm, $uid, $base = 0) {
 }
 
 function get_comments_count_by_nid($boot, $dm, $nid) {
-  $count_query = $dm->createQueryBuilder('Documents\Thread')
+  $count_query = $dm->createQueryBuilder(THREAD_CLASS)
     ->group(array('nid' => 1, 'nodeCache' => 0), array('count' => 0))
     ->reduce(<<<JS
 function (curr, result) {

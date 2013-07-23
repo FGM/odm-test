@@ -17,6 +17,8 @@ use Psr\Log\LogLevel;
 require 'vendor/autoload.php';
 
 class Boot {
+  const NS = 'Figaro\Premium\Comments';
+
   /**
    * @var string
    */
@@ -68,6 +70,11 @@ class Boot {
     return $ret;
   }
 
+  public static function getDocumentClass($name) {
+    $ret = static::NS . '\\Documents\\' . ucfirst($name);
+    return $ret;
+  }
+
   /**
    * Lazy instantiation of document manager.
    *
@@ -110,7 +117,7 @@ class Boot {
     $cache_dir = __DIR__ . '/cache';
     $db_name = 'odm';
     $annotated_directories = array(
-      __DIR__ . '/Documents',
+      __DIR__ . '/vendor/osinet/fpcomments/Figaro/Premium/Comments/Documents',
     );
 
     if (!is_dir($cache_dir)) {

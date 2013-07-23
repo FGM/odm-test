@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\Common\Util\Debug;
-use Documents\User;
+use Figaro\Premium\Comments\Documents\User;
 
 $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();

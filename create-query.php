@@ -39,7 +39,7 @@ $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 // Create a query on an unindexed collection requiring indexes to query.
-$qb = $dm->createQueryBuilder('Documents\Thread')
+$qb = $dm->createQueryBuilder('Figaro\Premium\Comments\Documents\Thread')
   ->field('name')
   ->equals(new \MongoRegex('/ar/'));
 $query = $qb->getQuery();

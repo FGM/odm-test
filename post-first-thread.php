@@ -1,13 +1,13 @@
 <?php
 
-use Documents\Thread;
+use Figaro\Premium\Comments\Documents\Thread;
 
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 use Doctrine\Common\Util\Debug;
-use Documents\Comment;
-use Documents\NodeCache;
-use Documents\UserCache;
+use Figaro\Premium\Comments\Documents\Comment;
+use Figaro\Premium\Comments\Documents\NodeCache;
+use Figaro\Premium\Comments\Documents\UserCache;
 
 
 $boot = require 'bootstrap.php';

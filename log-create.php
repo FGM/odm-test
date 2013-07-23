@@ -1,7 +1,7 @@
 <?php
 
 use Doctrine\Common\Util\Debug;
-use Documents\LogComment;
+use Figaro\Premium\Comments\Documents\LogComment;
 
 $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
