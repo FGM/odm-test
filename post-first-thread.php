@@ -16,10 +16,10 @@ $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 // Debug::dump($dm);
 
-$user = new UserCache(1, 'John Doe');
+$user = new UserCache(array('uid' => 1, 'name' => 'John Doe'));
 // Debug::dump($user);
 
-$node = new NodeCache(42, "Let's dance", $user);
+$node = new NodeCache(array('nid' => 42, 'title' => "Let's dance"), $user);
 // Debug::dump($node);
 
 $thread_sample = array(
@@ -36,7 +36,7 @@ $thread = new Thread($thread_sample, $node);
 // Quelques parents.
 for ($i = 0; $i < 3; $i++) {
   $user_id = rand(30, 40);
-  $user = new UserCache($user_id, 'John Doe ' . $user_id);
+  $user = new UserCache(array('uid' => $user_id, 'name' => 'John Doe ' . $user_id));
   $comment = array(
     'cid'         => $i,
     'comment_uid' => $user_id,
@@ -58,7 +58,7 @@ for ($i = 0; $i < 3; $i++) {
 // Some children..
 for ($i = 3; $i <= 10; $i++) {
   $user_id = rand(30, 40);
-  $user = new UserCache($user_id, 'John Doe ' . $user_id);
+  $user = new UserCache(array('uid' => $user_id, 'name' => 'John Doe ' . $user_id));
   $comment = array(
     'cid'         => rand(3, 10),
     'comment_uid' => $user_id,

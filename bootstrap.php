@@ -4,12 +4,20 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Cache\FilesystemCache;
 use Doctrine\Common\EventManager;
 use Doctrine\Common\Util\Debug;
+
+use Doctrine\MongoDB\Configuration as DbConfig;
 use Doctrine\MongoDB\Connection;
-use Doctrine\ODM\MongoDB\Configuration;
+
+use Doctrine\ODM\MongoDB\Configuration as DmConfig;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Doctrine\ODM\MongoDB\Mapping\Driver\AnnotationDriver;
-use Log\D6Logger;
-use Monolog\Logger;
+
+use Figaro\Premium\Comments\CommentService;
+use Figaro\Premium\Log\DoctrineLogger;
+
+use Monolog\Handler\StreamHandler;
+use Monolog\Logger as StandardLogger;
+
 use Psr\Log\LoggerAwareInterface;
 use Psr\Log\LoggerInterface;
 use Psr\Log\LogLevel;
@@ -17,18 +25,6 @@ use Psr\Log\LogLevel;
 require 'vendor/autoload.php';
 
 class Boot {
-  const NS = 'Figaro\Premium\Comments';
-
-  /**
-   * @var string
-   */
-  protected $app_name;
-
-  /**
-   * @var \Doctrine\ODM\MongoDB\Configuration
-   */
-  protected $config;
-
   /**
    * @var \Doctrine\ODM\MongoDB\DocumentManager
    */
@@ -40,20 +36,9 @@ class Boot {
   protected $logger;
 
   /**
-   * @var \Mongo
+   * @var array
    */
-  protected $mongo;
-
-  public function __construct($app_name = NULL) {
-    $this->app_name = $this->initApp($app_name);
-    $this->logger = $this->initLogger();
-    $this->config = $this->initConfig();
-    $this->mongo = $this->initMongo();
-
-    // Not mentioned in the docs, but used in tests and avoids autoloader errors
-    // on annotation classes.
-    AnnotationDriver::registerAnnotationClasses();
-  }
+  public $settings;
 
   public function __call($method, array $arguments) {
     $psr3_methods = array(
@@ -65,113 +50,21 @@ class Boot {
       $ret = call_user_func_array(array($this->logger, $method), $arguments);
     }
     else {
-      throw new ErrorException('Undefined logging method invoked.');
+      throw new ErrorException("Undefined logging method invoked: $method.\n");
     }
     return $ret;
   }
 
-  public static function getDocumentClass($name) {
-    $ret = static::NS . '\\Documents\\' . ucfirst($name);
-    return $ret;
-  }
-
   /**
-   * Lazy instantiation of document manager.
-   *
-   * @return \Doctrine\ODM\MongoDB\DocumentManager
-   */
-  public function getDocumentManager() {
-    if (!isset($this->documentManager)) {
-      $em = new EventManager();
-      $this->documentManager = DocumentManager::create(new Connection($this->mongo), $this->config, $em);
-    }
-
-    return $this->documentManager;
-  }
-
-  /**
-   * @return \Psr\Log\LoggerInterface
-   */
-  public function getLogger() {
-    return $this->logger;
-  }
-
-  /**
-   * @return \Mongo
+   * @return \Doctrine\MongoDB\MongoClient
    */
   public function getMongo() {
-    return $this->mongo;
-  }
-
-  public function initApp($app_name = NULL) {
-    if (!isset($app_name)) {
-      $app_name = basename(__DIR__);
-    }
-    return $app_name;
-  }
-
-  /**
-   * @return Configuration
-   */
-  public function initConfig() {
-    $cache_dir = __DIR__ . '/cache';
-    $db_name = 'odm';
-    $annotated_directories = array(
-      __DIR__ . '/vendor/osinet/fpcomments/Figaro/Premium/Comments/Documents',
-    );
-
-    if (!is_dir($cache_dir)) {
-      $status = mkdir($cache_dir, 0777, TRUE);
-      if (!$status) {
-        throw new \ErrorException('Could not create cache directory.');
-      }
-    }
-
-    $config = new Configuration();
-    $config->setProxyDir($cache_dir);
-    $config->setProxyNamespace('Proxies');
-    $config->setDefaultDB($db_name);
-    $config->setHydratorDir($cache_dir);
-    $config->setHydratorNamespace('Hydrators');
-
-    // The ODM defaults to 'safe' => TRUE.
-    $defaultCommitOptions = array(
-      'safe' => TRUE,
-      'fsync' => TRUE,
-    );
-    $config->setDefaultCommitOptions($defaultCommitOptions);
-
-    $reader = new AnnotationReader();
-    $cache = new FilesystemCache($cache_dir);
-    $cache->setNamespace('odm-test-myinstance');
-    $config->setMetadataCacheImpl($cache);
-    foreach ($annotated_directories as $dir) {
-      $config->setMetadataDriverImpl(new AnnotationDriver($reader, $dir));
-    }
-
-    return $config;
-  }
-
-  public function initLogger() {
-    if (function_exists('watchdog')) {
-      $logger = new D6Logger(pathinfo(__FILE__, PATHINFO_FILENAME));
-    }
-    else {
-      $logger = new Logger($this->app_name);
-    }
-
-    return $logger;
-  }
-
-  public function initMongo() {
-    // URL: mongodb://[username:password@]host1[:port1][,host2[:port2:],...]/db
-    $mongo = new Mongo();
-    return $mongo;
+    return $this->documentManager->getConnection()->getMongo();
   }
 
   public function listDBs() {
-    $dbs = $this->mongo->listDBs();
-    $this->logger->debug("Databases: " . implode(', ', array_map(function ($db) {
+    $dbs = $this->getMongo()->listDBs();
+    $this->logger->info("Databases: " . implode(', ', array_map(function ($db) {
         $ret = $db['name'] . '('
         . ($db['empty'] ? 'empty' : $db['sizeOnDisk'] / 1024 / 1024 . "M")
         . ')';
@@ -184,7 +77,129 @@ class Boot {
     $size = $this->documentManager->getUnitOfWork()->size();
     $this->logger->debug($size);
   }
+
+  /**
+   * Constructor. Merge default and actual parameters before initializing.
+   *
+   * @param array $settings
+   */
+  public function __construct(array $given_settings = array()) {
+    $default_settings = array(
+      'app_name' => basename(__DIR__),
+      'cache_dir' => 'cache',
+      'cache_namespace' => 'fpcomments',
+      // The ODM defaults to 'safe' => TRUE.
+      'commit_options' => array(
+        'safe' => TRUE,
+        'fsync' => TRUE,
+      ),
+      'logger_channel' => basename(__DIR__),
+    );
+
+    $this->settings = array_merge($default_settings, $given_settings);
+
+    $this->logger = new StandardLogger($this->settings['logger_channel']);
+    $this->logger->pushHandler(new StreamHandler('php://stderr', StandardLogger::INFO));
+    $this->documentManager = $this->createDocumentManager();
+  }
+
+  // TODO handle authenticated connections.
+  // TODO handle default values
+  protected static function buildConnectionString($credentials) {
+    $url = 'mongodb://' . $credentials['host'] . ':' . $credentials['port']
+      . '/' . $credentials['base'];
+    return $url;
+  }
+
+  /**
+   * Helper to build the document manager.
+   *
+   * @see createDocumentManager()
+   *
+   * @throws \ErrorException
+   *
+   * @return string
+   */
+  protected function initCache() {
+    $cache_dir = $this->settings['cache_dir'];
+    if (!is_dir($cache_dir)) {
+      $status = mkdir($cache_dir, 0777, TRUE);
+      if (!$status) {
+        throw new \ErrorException(t('Could not create FP Comments cache directory.'));
+      }
+    }
+    return $cache_dir;
+  }
+
+  /**
+   * Builds the a new DocumentManager from configuration.
+   *
+   * @throws \ErrorException
+   *
+   * @return Doctrine\ODM\MongoDB\DocumentManager
+   */
+  protected function createDocumentManager() {
+    $credentials = $this->settings['db_credentials'];
+    $evm = new EventManager();
+
+    // Set up connection.
+    $client = new \MongoClient(static::buildConnectionString($credentials));
+
+    $db_config = new DbConfig();
+    $logger_callable = new DoctrineLogger($this->logger);
+    $db_config->setLoggerCallable($logger_callable);
+    $connection = new Connection($client, array(), $db_config, $evm);
+
+    // Set up general DocumentManager configuration
+    $dm_config = new DmConfig();
+    $dm_config->setLoggerCallable($logger_callable);
+
+    // DM: Directories.
+    $cache_dir = $this->initCache();
+    $dm_config->setProxyDir($cache_dir);
+    $dm_config->setProxyNamespace('Proxies');
+    $dm_config->setHydratorDir($cache_dir);
+    $dm_config->setHydratorNamespace('Hydrators');
+
+    $dm_config->setDefaultDB($credentials['base']);
+    $dm_config->setDefaultCommitOptions($this->settings['commit_options']);
+
+    // DM: Metadata
+    $reader = new AnnotationReader();
+    $cache = new FilesystemCache($cache_dir);
+    $cache_namespace = $this->settings['cache_namespace'];
+    $cache->setNamespace($cache_namespace);
+    $dm_config->setMetadataCacheImpl($cache);
+    // Not mentioned in the docs, but used in tests and avoids autoloader errors
+    // on annotation classes.
+    AnnotationDriver::registerAnnotationClasses();
+    foreach (CommentService::getAnnotatedDirectories() as $dir) {
+      $annotation_driver = new AnnotationDriver($reader, $dir);
+      $dm_config->setMetadataDriverImpl($annotation_driver);
+    }
+
+    $dm = DocumentManager::create($connection, $dm_config, $evm);
+    return $dm;
+  }
+
+  public function getDocumentManager() {
+    return $this->documentManager;
+  }
+
+  public function getLogge() {
+    return $this->logger;
+  }
 }
 
-$boot = new Boot();
+$settings = array(
+  'app_name' => 'odm-test',
+  'db_credentials' => array(
+    'host' => 'localhost',
+    'port' => 27017,
+    'base' => 'comments',
+  ),
+  'logger_channel' => 'odm-test',
+);
+
+$boot = new Boot($settings);
 return $boot;

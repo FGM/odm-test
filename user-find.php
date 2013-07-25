@@ -6,7 +6,7 @@ use Figaro\Premium\Comments\Documents\User;
 $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
-$user_repo = $dm->getRepository(Boot::getDocumentClass('User'));
+$user_repo = $dm->getRepository(CommentService::getDocumentClass('User'));
 
 echo "Class: " . $user_repo->getClassName() . "\n";
 

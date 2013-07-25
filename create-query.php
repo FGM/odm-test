@@ -6,12 +6,13 @@
 
 namespace Documents;
 
-use Doctrine\MongoDB\Query\Query;
-
+use Doctrine\ODM\MongoDB\Query\Query;
 use Doctrine\ODM\MongoDB\MongoDBException;
+use Figaro\Premium\Comments\CommentService;
 
 function attemptQuery(Query $query, $shouldThrow) {
   try {
+    echo "Query indexed ? " . ($query->isIndexed() ? "Y" : "N") . "\n";
     $users = $query->execute();
     echo $shouldThrow
       ? "No exception thrown, but it should have.\n"
@@ -30,23 +31,19 @@ function attemptQuery(Query $query, $shouldThrow) {
   }
 }
 
-function checkQuery(Query $query) {
-  echo "Query indexed ? " . ($query->isIndexed() ? 'Y' : 'N') . "\n";
-}
-
 // Boot.
 $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 // Create a query on an unindexed collection requiring indexes to query.
-$qb = $dm->createQueryBuilder('Figaro\Premium\Comments\Documents\Thread')
-  ->field('name')
-  ->equals(new \MongoRegex('/ar/'));
-$query = $qb->getQuery();
+$qb = $dm->createQueryBuilder(CommentService::getDocumentClass('Thread'))
+  ->field('nid')
+  ->equals(42);
 
 // Verify that the query is not indexed.
-echo "Abide by the index requirement\n";
-checkQuery($query);
+echo "Require index\n";
+$qb->requireIndexes(TRUE);
+$query = $qb->getQuery();
 
 try {
   attemptQuery($query, $shouldThrow = TRUE);
@@ -57,14 +54,10 @@ catch (\Exception $e) {
 
 // Make sure it throws when executed because the collection requires indexes.
 
-
 // Now Bypass the index requirement.
 echo "\nIgnore the index requirement\n";
 $qb->requireIndexes(FALSE);
 $query = $qb->getQuery();
-
-// Verify that the query is still not indexed.
-checkQuery($query);
 
 // Run it again, it should no longer throw.
 attemptQuery($query, $shouldThrow = FALSE);

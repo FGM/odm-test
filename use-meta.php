@@ -5,6 +5,7 @@
  */
 
 use Doctrine\Common\Util\Debug;
+use Figaro\Premium\Comments\CommentService;
 use Figaro\Premium\Comments\Documents\User;
 
 function dump_mapping($mapping) {
@@ -23,8 +24,8 @@ $boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 $mdf = $dm->getMetadataFactory();
-$threadClass = $mdf->getMetadatafor(Boot::getDocumentClass('Thread'));
-// Debug::dump($threadClass->fieldMappings);
+$threadClass = $mdf->getMetadatafor(CommentService::getDocumentClass('Thread'));
+print_r($threadClass->indexes);
 
 foreach ($threadClass->fieldMappings as $fieldName => $fieldMapping) {
     echo $fieldName .": " . dump_mapping($fieldMapping) . "\n";
