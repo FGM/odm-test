@@ -1,4 +1,4 @@
 <?php
 
-$boot = require 'bootstrap.php';
+$boot = require 'Boot.php';
 $boot->listDBs();

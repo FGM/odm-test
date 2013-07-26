@@ -10,8 +10,8 @@ use Figaro\Premium\Comments\Documents\NodeCache;
 use Figaro\Premium\Comments\Documents\UserCache;
 
 
-$boot = require 'bootstrap.php';
-// Debug::dump($boot);
+$boot = require 'Boot.php';
+// Debug::dump($Boot);
 
 $dm = $boot->getDocumentManager();
 // Debug::dump($dm);

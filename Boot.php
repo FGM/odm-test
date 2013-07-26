@@ -186,7 +186,7 @@ class Boot {
     return $this->documentManager;
   }
 
-  public function getLogge() {
+  public function getLogger() {
     return $this->logger;
   }
 }

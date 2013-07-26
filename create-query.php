@@ -32,7 +32,7 @@ function attemptQuery(Query $query, $shouldThrow) {
 }
 
 // Boot.
-$boot = require 'bootstrap.php';
+$boot = require 'Boot.php';
 $dm = $boot->getDocumentManager();
 
 // Create a query on an unindexed collection requiring indexes to query.

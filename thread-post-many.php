@@ -34,7 +34,7 @@ echo "Do you need first level's answers only ? (y/n) : \n";
 $handle = fopen ("php://stdin","r");
 $first_level_only = trim(fgets($handle)) == 'y' ? TRUE : FALSE;
 
-$boot = require 'bootstrap.php';
+$boot = require 'Boot.php';
 $dm = $boot->getDocumentManager();
 
 for ($t = 0; $t < $amount_to_create; $t++) {

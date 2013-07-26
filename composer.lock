@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "a297ae352c64d255a4f8675c2fa4a2ba",
+    "hash": "cd6097316b5a2f12284d0e258d115258",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -612,7 +612,7 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:OSInet/fpcomments",
-                "reference": "18b34f5267ad5c4a565a57eb84dd7fbc5e1cf17c"
+                "reference": "271d05d64f75be8138225e56b0c6b244956b3567"
             },
             "require": {
                 "doctrine/mongodb-odm": "1.0.*",
@@ -634,7 +634,7 @@
                 }
             ],
             "description": "A new take on Drupal comments, combining SQL and MongoDB, by Le Figaro",
-            "time": "2013-07-23 13:38:40"
+            "time": "2013-07-25 16:17:56"
         },
         {
             "name": "psr/log",

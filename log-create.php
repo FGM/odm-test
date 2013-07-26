@@ -3,7 +3,7 @@
 use Doctrine\Common\Util\Debug;
 use Figaro\Premium\Comments\Documents\LogComment;
 
-$boot = require 'bootstrap.php';
+$boot = require 'Boot.php';
 $dm = $boot->getDocumentManager();
 
 // Debug::dump($dm);
