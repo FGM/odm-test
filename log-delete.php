@@ -1,11 +1,13 @@
 <?php
 
+use Figaro\Premium\Comments\Tests\Boot;
+
 use Figaro\Premium\Comments\CommentService;
 
 use Doctrine\Common\Util\Debug;
 use Figaro\Premium\Comments\Documents\LogComment;
 
-$boot = require 'Boot.php';
+$boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 $log = $dm->getRepository(CommentService::getDocumentClass('LogComment'))

@@ -20,7 +20,7 @@ function dump_mapping($mapping) {
   return implode(', ', $ret);
 }
 
-$boot = require 'Boot.php';
+$boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 $mdf = $dm->getMetadataFactory();

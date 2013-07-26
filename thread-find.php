@@ -11,7 +11,7 @@
 
 use Doctrine\Common\Util\Debug;
 
-$boot = require 'Boot.php';
+$boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 const THREAD_CLASS = 'Figaro\Premium\Comments\Documents\Thread';

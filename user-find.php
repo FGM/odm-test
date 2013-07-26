@@ -1,9 +1,10 @@
 <?php
 
 use Doctrine\Common\Util\Debug;
+use Figaro\Premium\Comments\CommentService;
 use Figaro\Premium\Comments\Documents\User;
 
-$boot = require 'Boot.php';
+$boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 $user_repo = $dm->getRepository(CommentService::getDocumentClass('User'));

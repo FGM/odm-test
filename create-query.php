@@ -31,8 +31,8 @@ function attemptQuery(Query $query, $shouldThrow) {
   }
 }
 
-// Boot.
-$boot = require 'Boot.php';
+// Bootstrap.
+$boot = require 'bootstrap.php';
 $dm = $boot->getDocumentManager();
 
 // Create a query on an unindexed collection requiring indexes to query.
