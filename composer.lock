@@ -3,7 +3,7 @@
         "This file locks the dependencies of your project to a known state",
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file"
     ],
-    "hash": "cd6097316b5a2f12284d0e258d115258",
+    "hash": "473f9d9c7295b58e5f4b063d00fa9895",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -546,26 +546,26 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "dev-master",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "050bb52fd803e4184f43629cc61df1057cea74c4"
+                "reference": "1.5.0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/050bb52fd803e4184f43629cc61df1057cea74c4",
-                "reference": "050bb52fd803e4184f43629cc61df1057cea74c4",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1.5.0",
+                "reference": "1.5.0",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.3.0",
-                "psr/log": "~1.0"
+                "psr/log": ">=1.0,<2.0"
             },
             "require-dev": {
                 "doctrine/couchdb": "dev-master",
                 "mlehner/gelf-php": "1.0.*",
-                "raven/raven": "0.5.*"
+                "raven/raven": "0.3.*"
             },
             "suggest": {
                 "doctrine/couchdb": "Allow sending log messages to a CouchDB server",
@@ -577,7 +577,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.6.x-dev"
+                    "dev-master": "1.4.x-dev"
                 }
             },
             "autoload": {
@@ -604,7 +604,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2013-07-17 16:11:27"
+            "time": "2013-04-23 10:09:48"
         },
         {
             "name": "osinet/fpcomments",
@@ -612,11 +612,15 @@
             "source": {
                 "type": "git",
                 "url": "git@github.com:OSInet/fpcomments",
-                "reference": "271d05d64f75be8138225e56b0c6b244956b3567"
+                "reference": "c72752126765d2e71ab24ecfa01515d6a7844340"
             },
             "require": {
                 "doctrine/mongodb-odm": "1.0.*",
                 "psr/log": "*"
+            },
+            "require-dev": {
+                "monolog/monolog": "1.5.*",
+                "phpunit/phpunit": "3.7.*"
             },
             "type": "library",
             "autoload": {
@@ -634,7 +638,7 @@
                 }
             ],
             "description": "A new take on Drupal comments, combining SQL and MongoDB, by Le Figaro",
-            "time": "2013-07-25 16:17:56"
+            "time": "2013-07-26 12:27:46"
         },
         {
             "name": "psr/log",

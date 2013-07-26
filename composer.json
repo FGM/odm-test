@@ -1,8 +1,6 @@
 {
     "require": {
-        "doctrine/mongodb-odm": "1.*",
-        "monolog/monolog": "*",
-        "psr/log": "*",
+        "monolog/monolog": "1.5.*",
         "OSInet/fpcomments": "*"
     },
     "autoload": {
