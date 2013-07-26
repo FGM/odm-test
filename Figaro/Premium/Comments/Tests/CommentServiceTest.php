@@ -49,9 +49,8 @@ class CommentServiceTest extends \PHPUnit_Framework_TestCase {
    * Cleans up the environment after running a test.
    */
   protected function tearDown() {
-    // TODO Auto-generated CommentServiceTest::tearDown()
+    $this->CommentService->getMongo()->dropDB(static::DB);
     $this->CommentService = null;
-
     parent::tearDown();
   }
 
