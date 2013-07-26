@@ -15,15 +15,9 @@ class CommentServiceTest extends \PHPUnit_Framework_TestCase {
   const CHANNEL = 'comments-phpunit-tests';
 
   /**
-   * @var Figaro\Premium\Comments\Tests\Boot
+   * @var \Boot
    */
   private $boot;
-
-  /**
-   *
-   * @var CommentService
-   */
-  private $CommentService;
 
   /**
    * Prepares the environment before running a test.
@@ -41,16 +35,15 @@ class CommentServiceTest extends \PHPUnit_Framework_TestCase {
       'logger_channel' => static::CHANNEL,
     );
 
-    $boot = new \Boot($settings);
-    $this->CommentService = new CommentService($boot->getDocumentManager(), $boot->getLogger());
+    $this->boot = new \Boot($settings);
   }
 
   /**
    * Cleans up the environment after running a test.
    */
   protected function tearDown() {
-    $this->CommentService->getMongo()->dropDB(static::DB);
-    $this->CommentService = null;
+    $this->boot->getMongo()->dropDB(static::DB);
+    $this->boot = null;
     parent::tearDown();
   }
 
@@ -58,7 +51,6 @@ class CommentServiceTest extends \PHPUnit_Framework_TestCase {
    * Constructs the test case.
    */
   public function __construct() {
-    // TODO Auto-generated constructor
   }
 
   /**
@@ -135,10 +127,8 @@ class CommentServiceTest extends \PHPUnit_Framework_TestCase {
    * Tests CommentService->__construct()
    */
   public function test__construct() {
-    // TODO Auto-generated CommentServiceTest->test__construct()
-    $this->markTestIncomplete("__construct test not implemented");
-
-    $this->CommentService->__construct(/* parameters */);
+    $service = new CommentService($this->boot->getDocumentManager(), $this->boot->getLogger());
+    $this->assertInstanceOf('Figaro\Premium\Comments\CommentService', $service, 'CommentService instantiation works.');
   }
 
   /**
